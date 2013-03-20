@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  ul(id='messages')
+  input(id='msg')
+  input(id='btn', type='submit')
+  script(src='http://ajax.microsoft.com/ajax/jQuery/jquery-1.9.1.min.js')
+  script(src='/socket.io/socket.io.js')
+  :coffeescript
+    $ ->
+      socket = io.connect()
+      socket.on 'news', (data) -> show(data)
+      $('#btn').on 'click', ->
+        inputmsg = $('#msg')
+        msg = inputmsg.val()
+        inputmsg.val ''
+        socket.emit 'message', msg
+    show = (msg) ->
+      $('#messages').append "<li>#{msg}</li>"
